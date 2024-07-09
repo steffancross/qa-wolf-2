@@ -1,6 +1,6 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
 const { chromium } = require("playwright");
-const { loadNextPage } = require("./helperFunctions");
+const { loadNextPage, validateSequentialTime } = require("./helperFunctions");
 
 async function sortHackerNewsArticles() {
   // launch browser
@@ -22,7 +22,9 @@ async function sortHackerNewsArticles() {
     await loadNextPage(page);
   }
   articlePostTimes = articlePostTimes.slice(0, 100);
-  console.log(articlePostTimes);
+  validateSequentialTime(articlePostTimes)
+    ? console.log("Times are valid")
+    : console.log("Times invalid");
 }
 
 (async () => {
