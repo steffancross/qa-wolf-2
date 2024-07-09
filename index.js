@@ -9,6 +9,15 @@ async function sortHackerNewsArticles() {
 
   // go to Hacker News
   await page.goto("https://news.ycombinator.com/newest");
+
+  const articlePostTimes = [];
+  const temporaryLocators = await page.locator(".age").all();
+
+  for (const locator of temporaryLocators) {
+    const timestamp = await locator.getAttribute("title");
+    articlePostTimes.push(timestamp);
+  }
+  console.log(articlePostTimes.length);
 }
 
 (async () => {
