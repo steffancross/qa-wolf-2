@@ -1,5 +1,6 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
 const { chromium } = require("playwright");
+const { loadNextPage } = require("./helperFunctions");
 
 async function sortHackerNewsArticles() {
   // launch browser
@@ -10,14 +11,18 @@ async function sortHackerNewsArticles() {
   // go to Hacker News
   await page.goto("https://news.ycombinator.com/newest");
 
-  const articlePostTimes = [];
-  const temporaryLocators = await page.locator(".age").all();
+  let articlePostTimes = [];
+  while (articlePostTimes.length < 100) {
+    const temporaryLocators = await page.locator(".age").all();
 
-  for (const locator of temporaryLocators) {
-    const timestamp = await locator.getAttribute("title");
-    articlePostTimes.push(timestamp);
+    for (const locator of temporaryLocators) {
+      const timestamp = await locator.getAttribute("title");
+      articlePostTimes.push(timestamp);
+    }
+    await loadNextPage(page);
   }
-  console.log(articlePostTimes.length);
+  articlePostTimes = articlePostTimes.slice(0, 100);
+  console.log(articlePostTimes);
 }
 
 (async () => {
