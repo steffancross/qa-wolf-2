@@ -1,20 +1,24 @@
 import { test, expect } from "@playwright/test";
 
+/*
+  Was going crazy getting incosistent testing results.
+  Turns out it was them being run in parallel and getting rate limited by the site.
+  Had to set workers to 1 in the config and still manually limit the last test.
+  There may be a better solution, would love to know. 
+*/
+
 test.beforeEach(async ({ page }) => {
   await page.goto("https://news.ycombinator.com/newest");
 });
 
 test("Page has articles", async ({ page }) => {
-  const articleCount = await page.locator(".age").count();
-  expect(articleCount).toBeGreaterThan(0);
+  expect(await page.locator(".age").count()).toBeGreaterThan(0);
 });
 
 test("Page has more button", async ({ page }) => {
-  const moreButton = await page.getByRole("link", {
-    name: "More",
-    exact: true,
-  });
-  expect(moreButton).not.toBeNull();
+  expect(
+    await page.getByRole("link", { name: "More", exact: true })
+  ).not.toBeNull();
 });
 
 test("There are enough articles", async ({ page }) => {
@@ -35,5 +39,3 @@ test("There are enough articles", async ({ page }) => {
 
   expect(count).toBeGreaterThanOrEqual(100);
 });
-
-// fix rate limiting

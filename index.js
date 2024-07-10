@@ -4,7 +4,7 @@ const { loadNextPage, validateSequentialTime } = require("./helperFunctions");
 const moment = require("moment");
 
 // More understandable approach, get all articles first, then check if they are correctly ordered.
-// Two passes, data collection and data validation.
+// Two passes, data collection and data validation. Storing all in an array.
 async function sortHackerNewsArticles() {
   // launch browser
   const browser = await chromium.launch({ headless: false });
@@ -15,6 +15,7 @@ async function sortHackerNewsArticles() {
     // go to Hacker News
     await page.goto("https://news.ycombinator.com/newest");
 
+    // collect all the articles
     let articlePostTimes = [];
     while (articlePostTimes.length < 100) {
       const temporaryLocators = await page.locator(".age").all();
@@ -25,6 +26,8 @@ async function sortHackerNewsArticles() {
       }
       await loadNextPage(page);
     }
+
+    // process and validate their post times
     articlePostTimes = articlePostTimes.slice(0, 100);
     validateSequentialTime(articlePostTimes)
       ? console.log("Articles were correctly ordered newest to oldest")
@@ -54,6 +57,7 @@ async function sortHackerNewsArticles2() {
     let currentPageIndex = 0;
     const nextPageIndex = (await page.locator(".age").count()) - 1;
 
+    // compare and validate current article time against the previous one
     while (articlesChecked < 100) {
       const currentElement = await page.locator(".age").nth(currentPageIndex);
       const currentArtcTime = await currentElement.getAttribute("title");
