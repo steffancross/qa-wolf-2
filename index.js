@@ -45,6 +45,7 @@ async function sortHackerNewsArticles2() {
   let prevArtcTime = null;
   let articlesChecked = 0;
   let currentPageIndex = 0;
+  const nextPageIndex = (await page.locator(".age").count()) - 1;
 
   while (articlesChecked < 100) {
     const currentElement = await page.locator(".age").nth(currentPageIndex);
@@ -55,11 +56,7 @@ async function sortHackerNewsArticles2() {
       break;
     }
 
-    const lastArtcTime = await page
-      .locator(".age")
-      .last()
-      .getAttribute("title");
-    if (currentArtcTime === lastArtcTime) {
+    if (currentPageIndex === nextPageIndex) {
       await loadNextPage(page);
       currentPageIndex = 0;
     }
