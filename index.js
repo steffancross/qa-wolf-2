@@ -18,9 +18,9 @@ async function sortHackerNewsArticles() {
     // collect all the articles
     let articlePostTimes = [];
     while (articlePostTimes.length < 100) {
-      const temporaryLocators = await page.locator(".age").all();
+      const timeLocators = await page.locator(".age").all();
 
-      for (const locator of temporaryLocators) {
+      for (const locator of timeLocators) {
         const timestamp = await locator.getAttribute("title");
         articlePostTimes.push(timestamp);
       }
@@ -28,7 +28,6 @@ async function sortHackerNewsArticles() {
     }
 
     // process and validate their post times
-    articlePostTimes = articlePostTimes.slice(0, 100);
     validateSequentialTime(articlePostTimes)
       ? console.log("Articles were correctly ordered newest to oldest")
       : console.log("Articles were not ordered newest to oldest");
@@ -40,7 +39,7 @@ async function sortHackerNewsArticles() {
 }
 
 // Less straight forward but more time and space efficient.
-// One pass, no extra memory, and can early exit.
+// One pass, no extra memory, can early exit.
 async function sortHackerNewsArticles2() {
   // launch browser
   const browser = await chromium.launch({ headless: false });

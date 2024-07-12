@@ -5,7 +5,7 @@ async function loadNextPage(page) {
 }
 
 function validateSequentialTime(array) {
-  for (let i = 0; i <= array.length; i++) {
+  for (let i = 0; i < 100; i++) {
     if (moment(array[i]).isBefore(moment(array[i + 1]))) {
       return false;
     }

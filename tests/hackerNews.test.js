@@ -2,9 +2,9 @@ import { test, expect } from "@playwright/test";
 
 /*
   Was going crazy getting incosistent testing results.
-  Turns out it was them being run in parallel and getting rate limited by the site.
-  Had to set workers to 1 in the config and still manually limit the last test.
-  There may be a better solution, would love to know. 
+  Turns out it was them being run in parallel and getting rate limited by hacker news.
+  Set workers to 1 in the config and still had to manually wait in the last test.
+  There probably is a better way, would love to know. 
 */
 
 test.beforeEach(async ({ page }) => {
@@ -34,7 +34,7 @@ test("There are enough articles", async ({ page }) => {
         exact: true,
       })
       .click();
-    await page.waitForTimeout(2000); //was being rate limited
+    await page.waitForTimeout(1500); //was being rate limited
   }
 
   expect(count).toBeGreaterThanOrEqual(100);
